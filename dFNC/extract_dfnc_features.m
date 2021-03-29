@@ -34,6 +34,7 @@ end
 
 states_by_sub = [reshape(states(1:10,:)',1,4980);reshape(states(11:20,:)',1,4980);reshape(states(21:30,:)',1,4980);reshape(states(31:40,:)',1,4980);reshape(states(41:50,:)',1,4980);reshape(states(51:60,:)',1,4980);reshape(states(61:70,:)',1,4980)];
 
+% Manually re-order the brain states
 % states_reorder = changem(states_by_sub,[1 2 3 4 5 6],[5 1 4 6 2 3]);
 % states_reorder = changem(states_by_sub,[1 2 3 4 5 6],[6 2 1 4 5 3]);
 % states_reorder = changem(states_by_sub,[1 2 3 4 5 6],[2 3 1 4 5 6]);
