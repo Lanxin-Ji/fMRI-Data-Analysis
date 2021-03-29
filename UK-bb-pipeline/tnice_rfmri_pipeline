@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# Script name: tnice_prepare_rfMRI
+#
+# Description: Script to generate the FEAT configuration file for resting fMRI.
+#
+# Authors: Lanxin Ji	
+#
+# Copyright 2020 NCRC, Tiantan Hospital
+
+# export BB_BIN_DIR="/Users/hanalytics/Documents/UK_biobank_pipeline_v_1-master"
+
+cd rfMRI
+nameDir="$PWD"
+
+fmriNumVol=`fslval rfMRI.nii.gz dim4`
+fmriTR=`fslval rfMRI.nii.gz pixdim4`
+descrip=`fslval rfMRI.nii.gz descrip`
+descrip=(`echo $descrip | tr ';' ' '`)
+fmriTE=${descrip[0]:3}
+fmriDwell=${descrip[3]:6}
+
+$BB_BIN_DIR/bb_pipeline_tools/bb_GDC --workingdir=rfMRI_SBREF_GDC --in=rfMRI_SBREF.nii.gz --out=rfMRI_SBREF_ud.nii.gz --owarp=rfMRI_SBREF_ud_warp.nii.gz
+
+for elem in `cat rfMRI.fsf | grep -oP '_--_\K.*?(?=_-_)' | sort | uniq` ; do
+    val=`echo ${!elem} | sed 's|/|\\\/|g'`
+    sed -i "s/_--_${elem}_-_/${val}/g" rfMRI.fsf
+done 
+
+echo "set fmri(outputdir)     \""$nameDir"/rfMRI.ica\"" >> rfMRI.fsf
+echo "set feat_files(1)       \""$nameDir"/rfMRI.nii.gz\"" >> rfMRI.fsf
+echo "set alt_ex_func(1)      \""$nameDir"/rfMRI_SBREF.nii.gz\"" >> rfMRI.fsf
+echo "set unwarp_files(1)     \""$nameDir"/fieldmap/fieldmap_fout_to_T1_brain_rad.nii.gz\"" >> rfMRI.fsf
+echo "set unwarp_files_mag(1) \""$nameDir"/T1_brain.nii.gz\"" >> rfMRI.fsf
+echo "set highres_files(1)    \""$nameDir"/fT1_brain.nii.gz\"" >> rfMRI.fsf
+echo "set fmri(gdc)           \""$nameDir"/rfMRI_SBREF_ud_warp.nii.gz\"" >> rfMRI.fsf
+echo "set fmri(tr) $fmriTR" >> rfMRI.fsf
+echo "set fmri(npts) $fmriNumVol"  >> rfMRI.fsf
+echo "set fmri(dwell) $fmriDwell" >> rfMRI.fsf
+echo "set fmri(te) $fmriTE" >> rfMRI.fsf
+
+feat rfMRI.fsf
