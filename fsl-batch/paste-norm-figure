@@ -1,0 +1,35 @@
+#! /bin/bash
+
+DATADIR="/media/jilanxin/DATA2/fetal_brain/Normalization-check-32wk_tmp"
+
+#for sub in $DATADIR/*
+#do
+
+# echo $sub
+# MYID=${sub:0-7:7}
+# #MYID=basename $sub
+# echo $MYID
+ 
+# #cp $sub/${MYID}_run1_maskA-reoriented/4Dsegments.feat/reg/example_func2standard.png #$DATADIR/../Normalization-check-wkly_tmp/$MYID
+ 
+# #cp $sub/*run1_maskA*/4Dsegments.feat/reg/example_func2standard.png $DATADIR/../Normalization-check-wkly_tmp/$MYID
+# cp $sub/*run1_maskA*/4Dsegments+.feat/reg/example_func2standard.png $DATADIR/../Normalization-check-32wk_tmp/$MYID	
+#done
+
+##Failed sub:  "2107-T2" "2101-T2" "2122-T1" "2126-T1" "2136-T1" "2144-T2" "2146-T1" "2151-T2" "2181-T2" "2182-T1" "2184-T2" "2190-T2" "2208-T2"
+
+#cd $DATADIR
+#for sub in "2122-T1" "2126-T1" #no feat+
+#do
+# echo $sub
+# cp $DATADIR/$sub/*zoom1_maskA*/4Dsegments.feat/reg/example_func2standard.png $DATADIR/../Normalization-check-wkly_tmp/$sub
+# cp $DATADIR/$sub/*zoom1_maskA*/4Dsegments+.feat/reg/example_func2standard.png $DATADIR/../Normalization-check-32wk_tmp/$sub	
+
+#done
+
+
+for sub in $DATADIR/*
+do
+ echo $sub
+ mv $sub $sub.jpg
+done

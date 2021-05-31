@@ -1,0 +1,39 @@
+#!bin/sh
+
+#DATADIR="/media/jilanxin/DATA2/fetal_brain/FSL_test_example/2013-T1"
+#TMP="/media/jilanxin/DATA2/fetal_brain/FetalAtlas/weekly-T2/wk32"
+DATADIR=$1
+TMP=$2
+
+echo $DATADIR
+echo $TMP
+
+merge_cmd="fslmerge -t $DATADIR/merged_data_std"
+for sess in $DATADIR/*
+do
+  if test -d $sess
+  then
+	cd $sess
+	echo $sess
+
+  	#fslmerge -t 4Dsegments *V*
+
+	cp /media/jilanxin/DATA2/fetal_brain/FSL_test_example/design.fsf rfMRI.fsf 
+	nameDIR="$PWD"
+ 	
+	fmriNumVol=`fslval 4Dsegments.nii.gz dim4`
+
+	echo "set feat_files(1)       \""$nameDIR"/4Dsegments.nii.gz\"" >> rfMRI.fsf
+	echo "set fmri(npts) $fmriNumVol"  >> rfMRI.fsf
+	echo "set fmri(regstandard)      \""$TMP"\"" >> rfMRI.fsf
+
+	feat rfMRI.fsf
+
+	flirt -ref 4Dsegments.feat/reg/example_func2standard.nii.gz -in 4Dsegments.feat/filtered_func_data.nii.gz -applyxfm -init 4Dsegments.feat/reg/example_func2standard.mat -out r1_data_std
+
+	merge_cmd="$merge_cmd $nameDIR/r1_data_std"
+  fi
+done
+
+echo $merge_cmd
+$merge_cmd

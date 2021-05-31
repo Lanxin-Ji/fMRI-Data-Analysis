@@ -1,0 +1,12 @@
+#! /bin/bash
+
+DATADIR="/media/jilanxin/DATA2/fetal_brain/LANXIN_DYNAMIC_FC_Data"
+
+for sub in "2053-T1" "2162-T1" "2205-T1" "2179-T2" "2070-T1" "2141-T1" "2077-T1" "2225-T1" "2091-T1" "2037-T1" "2123-T1" "2226-T2" "2184-T2" "2163-T2" "2138-T1"
+do
+ echo $sub
+ cp $DATADIR/$sub/merged_data_std.feat/mc/disp.png $DATADIR/../realign2-check-wkly_tmp/$sub.png
+ cp $DATADIR/$sub/merged_data_std-avg.feat/mc/disp.png $DATADIR/../realign2-check-32wk_tmp/$sub.png
+ 	
+done
+
